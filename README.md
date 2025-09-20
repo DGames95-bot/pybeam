@@ -1,53 +1,99 @@
-# Beam Analysis
+# PyBeam – Structural Beam Analysis in Python
 
-Beam Analysis is a lightweight Python package for structural beam analysis.
+![Project Status: Alpha](https://img.shields.io/badge/status-alpha-orange)
+![PyPI](https://img.shields.io/pypi/v/pybeam-structural)
+![License](https://img.shields.io/github/license/dgames95/pybeam)
+![Docs](https://img.shields.io/readthedocs/pybeam-structural)
 
-### Example - Cantilever Beam
+**PyBeam** is a lightweight, Python-based library for analyzing beams. v0.1.0 supports creating internal stress diagrams
 
-    from pybeam import members
+## Table of Contents
 
-    length = 5  # m
-    resolution = 1000  # points
-    load = 50  # N
-    load_position = 5  # m
+- [Installation](#installation)
+- [Quick Example](#quick-example)
+- [Sign Conventions](#sign-conventions)
+- [Testing](#testing)
+- [Build](#build)
+- [Documentation](#documentation)
+- [License](#license)
 
-    # create generic loadable member
-    loadable = members.Loadable(length, resolution)
+## Installation
 
-    # add load 
-    loadable.add_shear_point_force(load, load_position/length)  # relative position
+Install via pip:
 
-    # reaction loads (no automated solver yet)
-    loadable.add_shear_point_force(-load, 0)
-    loadable.add_point_moment(-load*length, 0)
+```bash
+pip install pybeam-structural
+````
 
-    loadable.plot()
+## Quick Example – Cantilever Beam with Point Load
+
+```python
+from pybeam import members
+
+# Define beam properties
+length = 5  # meters
+resolution = 1000
+
+# Define load
+load = 50  # N
+load_position = 5  # meters from fixed end
+
+# Create beam object
+beam = members.Loadable(length, resolution)
+
+# Apply point load (as fraction of beam length)
+beam.add_shear_point_force(load, load_position / length)
+
+# Manually add support reactions
+beam.add_shear_point_force(-load, 0)            # Fixed end vertical reaction
+beam.add_point_moment(-load * length, 0)        # Fixed end moment
+
+# Plot shear and moment diagrams
+beam.plot()
+```
+
+## Sign Conventions
+
+* Positive **shear force**: acts **downward**
+* Positive **moment**: causes **sagging** (concave up)
+
+## Testing
+
+Install dev dependencies:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run with coverage:
+
+```bash
+coverage run -m pytest
+coverage report -m
+```
+
+## Build
+
+Build the package (creates `.whl` in `dist/`):
+
+```bash
+python -m build
+```
+
+## Documentation
+[https://pybeam-structural.readthedocs.io/en/latest/](https://pybeam-structural.readthedocs.io/en/latest/)
+
+Generated via sphinx, see [docs](./docs/README.md)
 
 
+## License
 
-Sign convention: positive shear loads downwards.
+MIT License – see [LICENSE](./LICENSE)
 
-### Use
-(windows)
-
-clone repo
-
-    python -m venv ./venv
-    ./venv/Scripts/Activate.ps1
-
-    pip install -r requirements.txt
-    
-
-test:
-    pip install -r requirements-dev.txt
-    python -m pytest .\test\
-
-    coverage run -m pytest
-    coverage report -m
-
-#### build
-
-    python -m build
-
-whl file in dist/
 

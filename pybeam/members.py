@@ -4,7 +4,7 @@ Module for members - core of the pybeam interface.
 Classes:
     AbstractMember: Abstract base class for beam members.
 
-    Loadable: A class that extends a loading case with simple to use methods. 
+    Loadable: A class that extends a loading case with simple to use methods.
             Can be instantiated directly or used as a mixin.
 
     UniformMember: A uniform beam member with constant cross-section and material properties.
@@ -32,7 +32,7 @@ class AbstractMember(ABC):
 
 class Loadable():
     """
-    A class that extends a loading case with simple to use methods. 
+    A class that extends a loading case with simple to use methods.
     Can be instantiated directly or used as a mixin.
     """
     loading: LoadingCase
@@ -41,7 +41,7 @@ class Loadable():
         self.loading = LoadingCase(length=length, num_points=resolution, name=name)
 
 
-    def add_axial_point_force(self, magnitude: float, position: float):
+    def add_axial_point_force(self, magnitude: float, position: float) -> "Loadable":
         """
         Add an axial point force to the member.
 
@@ -50,8 +50,9 @@ class Loadable():
             position: The relative position along the member (from 0 to 1).
         """
         self.loading.axial_loads.append(PointForce(magnitude, position))
+        return self
 
-    def add_shear_point_force(self, magnitude: float, position: float):
+    def add_shear_point_force(self, magnitude: float, position: float) -> "Loadable":
         """
         Add a shear point force to the member.
 
@@ -60,8 +61,9 @@ class Loadable():
             position: The relative position along the member (from 0 to 1).
         """
         self.loading.shear_loads.append(PointForce(magnitude, position))
+        return self
 
-    def add_point_moment(self, magnitude: float, position: float):
+    def add_point_moment(self, magnitude: float, position: float) -> "Loadable":
         """
         Add a point moment to the member.
 
@@ -70,6 +72,7 @@ class Loadable():
             position: The relative position along the member (from 0 to 1).
         """
         self.loading.point_moments.append(PointMoment(magnitude, position))
+        return self
 
     def analyze(self) -> BeamAnalyzer:
         """Return a BeamAnalyzer for this member's loading case."""
